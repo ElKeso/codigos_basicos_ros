@@ -1,0 +1,14 @@
+<launch>
+ <node
+    pkg"nombredelpaquete"
+    type ="el nodo a iniciar"
+    name= "nombredeinstancia"
+    //launch-prefit = "xterm e-" (se ejecuta en su propia ventana)
+    //respawn = "true" esto evita que se cierre la ventana
+    //required == "true" si ce cierra mata el resto
+    ns = "espacio de trabajo" //permite escoger grupo de trabajos y agrupar nodos
+    //><remap = from "untopico" to "otrotopico" //esto cambia el topico de un nodo
+    />
+    //</node>//solo si pones remap	
+
+</launch>
