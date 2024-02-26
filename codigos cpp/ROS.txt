@@ -1,0 +1,178 @@
+ip raspberry:  192.168.0.39
+ip u 192.168.0.117
+ip celu 192.168.115.22
+
+			I) Comandos Ros en terminal:
+doble tabular para ver elememntos....
+
+roscore: Inicia ROS
+
+rostopic: muestra topicos...
+
+rostopic list: listado de topicos
+
+rqt_graph: esquema de nodos y topicos
+
+rosrun: corre un paquete rosrun "paquete" "nodo"
+
+rosccp:biblioteca c++ para hacer nodos
+
+rospack find ....: entrega ruta del paquete ros
+
+roscd ....: te envia a la localizacion del paquete
+
+roscd log ....: envia a carpeta de registros del paquete
+
+rosls ....: indica las carpetas disponibles dentro del paquete 
+
+			II) crear y configurar workspace
+
+mkdir (nombre carpeta)..:  es un comando para crear una carpeta para el workspace
+para crear un workspace necesita otra carpeta en su interior llamada src, osea usar comando mkdir src dentro de la carpeta.
+
+posteriormente se usa el comando catkin_make para crear el workspace en la carpeta creada
+
+para poder utilizar el workspace se debe usar el comando:
+
+source ~/(carpetacreada)/devel/setup.bash
+
+despues copiar el comando en el gedit de ros con el comando
+
+gedit ~/.bashrc
+
+
+para crear nodos y programas se debe crear paquetes dentro de la carpeta src
+
+			III) crear paquetes, nodos y programas
+
+para crear un paquete se utiliza el comando 
+
+catkin_create_pkg (nombre del paquete) (rospy y otras dependencias)...:
+
+este creara un paquete donde en su interior puede albergar nodos, publicadoes topicos etc
+
+para abrir localizacion del paquete en visual studio coder usar comando code . ...:
+
+cuando se realizen nuevos nodos o nuevos paquetes volver a usar catkin_make para actualizar
+
+como consejo crear en (carpeta)/src/(paquete) crear carpeta scripts para nodos con mkdir scripts
+
+para crear archivos python y crear nuestros nodos se utiliza los comandos
+
+touch (nombredelarchivo).py
+chmod +x (nombre del archivo).py
+
+			IV) Programar nodos, topicos o programas en ros "Python3"
+
+para iniciar codigos python de ros comienzan:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#!/usr/bin/env python3
+import rospy
+
+if __name__ == "__main__":
+	rospy.init_node("nombre del nodo")
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+comandos python ros
+
+rospy.loginfo("texto"): muesta texto en pantalla para texto mas variables ("texto" + variable + "texto" + ...)
+rospy.logwarn("texto"): muesta texto en pantalla alarma
+rospy.logerr("texto"): muesta texto en pantalla error
+
+rospy.sleep(tiempo en seg): detiene el programa un tiempo en seg
+
+rospy.is_shutdown(): reconoce cuando el nodo es detenido se utiliza en con un while not para mantener un proceso
+
+(nombrevariable) = rospy.Rate(valor en frecuencia) genera una variable de frecuencia para un proceso repetitivo
+
+(nombre de variable de rate).sleep() detiene el programa con la frecuencia del comando anterior
+
+(Nombredepublicacion)=rospy.Publisher("(nombredeltopico)",(tipodemensaje),tamaño del queue) importante!!!!! para publicar
+(Nombredepublicacion).publish(nombredecvariablemensaje) publica el mensaje de las variables de mensaje y publicacion
+
+
+(nombredecvariablemensaje)=(tipodemensaje)(): crea variable del tipo de mensaje
+(nombredecvariablemensaje).(partedelmensaje).(secciondelmensaje): se utiliza para escribir en las partes del mensaje
+
+
+(nombredesubscriptor) = rospy.Subscriber("(nombredeltopico)",(tipodemensaje), callback=(lo que mostrara en pantalla el subscriptor, este se define como funcion aparte))
+
+rospy.spin() bloquea en un loop infinito hasta que se apague el nodo
+
+
+
+				IV) progamar nodos y programas "C++"
+
+para iniciar un codigo ros en c++ se inicia...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#include "ros/ros.h"
+#include otros includes necesarios como std_msgs para mensajes
+
+int main(int argc, char **argv){
+	ros::init(argc, argv, "nombredelnodo");
+	ros::NodeHandle nh;
+	...
+	...
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+basico ros publicador 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#include "ros/ros.h"
+#include "std_msgs/String.h"//caso de mensajes strings
+
+int main(int argc, char **argv){
+	ros::init(argc, argv, "nombredelnodo");
+	ros::NodeHandle nh;
+	ros::Publisher chatter_pub = nh.advertise<std_msgs::String>("nombredelropico",1000);
+	ros::Rate variablerate(10);
+	std_msgs::String msg;
+	while(ros::ok()){
+		msg.data="helo world"
+		chatter_pub.publish(msg);
+		variablerate.sleep();
+	}
+
+	return 0;
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+Basico subscriptor
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#include "ros/ros.h"
+#include "std_msgs/String.h"
+
+int main(int argc, char **argv){
+	ros::init(argc, argv, "nombredelnodo");
+	ros::NodeHandle nh;
+	ros::Publisher chatter_pub = nh.advertise<std_msgs::String>("chatter",1000);
+	ros::Rate loop_rate(10);
+	std_msgs::String msg;
+	while(ros::ok()){
+		msg.data="helo world";
+		chatter_pub.publish(msg);
+		loop_rate.sleep();
+	}
+
+	return 0;
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+es necesario ir a archivo CMakelist.txt y en la linea 136 descomentar el add_executable((nombre del nodo) src/(ubicacionnodo))
+y en linea 149 descomentar target_link_libraries((nombre del nodo)...
+linea 150 descomentar y linea 151 descomentar 
+
+comandos:
+
+ROS_INFO("TEXT") muestra elementos en pantalla
+
+
+ 
